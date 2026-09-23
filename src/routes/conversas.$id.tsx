@@ -17,12 +17,12 @@ export const Route = createFileRoute("/conversas/$id")({
 
 function Conversa() {
   const { id } = Route.useParams();
-  const { modelos, config, conversas, pensando, enviar, registrarVenda, marcarPago } = useDb();
+  const { modelos, config, conversas, pensando, enviar } = useDb();
   const navigate = useNavigate();
   const perfil = modelos.find((m) => m.id === id);
   const [texto, setTexto] = useState("");
   const [pagamento, setPagamento] = useState(false);
-  const [processando, setProcessando] = useState(false);
+
   const fim = useRef<HTMLDivElement>(null);
 
   const mensagens = perfil ? (conversas[id] ?? []) : [];
@@ -127,7 +127,7 @@ function Conversa() {
           modeloNome={perfil.nome}
           minutos={minutos}
           valor={valor}
-          clienteRotulo={cliente}
+          clienteRotulo={config.nomeSite || "Cliente"}
           onFechar={() => setPagamento(false)}
           onPago={() => {
             setPagamento(false);
