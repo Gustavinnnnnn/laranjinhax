@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { formatBRL, useDb } from "@/lib/store";
+import { formatBRL } from "@/lib/store";
+import { useVendas } from "@/lib/pagamentos-cloud";
 
 export const Route = createFileRoute("/admin/clientes")({
   component: Clientes,
 });
 
 function Clientes() {
-  const { vendas } = useDb();
+  const { vendas } = useVendas();
 
   const porCliente = new Map<
     string,

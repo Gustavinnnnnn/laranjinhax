@@ -3,6 +3,7 @@ import { LockKeyhole, Mail } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
+import { criarPrimeiroAdmin, existeAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/login")({
   component: AdminLogin,
@@ -14,6 +15,7 @@ function AdminLogin() {
   const [senha, setSenha] = useState("");
   const [carregando, setCarregando] = useState(true);
   const [entrando, setEntrando] = useState(false);
+  const [primeiroAcesso, setPrimeiroAcesso] = useState(false);
 
   useEffect(() => {
     let ativo = true;
@@ -21,10 +23,18 @@ function AdminLogin() {
       setCarregando(false);
       return;
     }
-    supabase.auth.getSession().then(({ data }) => {
-      if (ativo && data.session) navigate({ to: "/admin" });
-      else if (ativo) setCarregando(false);
-    });
+    void (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!ativo) return;
+      if (data.session) {
+        navigate({ to: "/admin" });
+        return;
+      }
+      const resultado = await existeAdmin().catch(() => ({ existe: true }));
+      if (!ativo) return;
+      setPrimeiroAcesso(!resultado.existe);
+      setCarregando(false);
+    })();
     return () => {
       ativo = false;
     };
@@ -33,7 +43,7 @@ function AdminLogin() {
   async function entrar(e: FormEvent) {
     e.preventDefault();
     if (!supabase) {
-      toast.error("Supabase não está configurado neste ambiente.");
+      toast.error("O banco de dados não está disponível neste ambiente.");
       return;
     }
     if (!email.trim() || !senha) {
@@ -42,6 +52,25 @@ function AdminLogin() {
     }
 
     setEntrando(true);
+
+    if (primeiroAcesso) {
+      if (senha.length < 8) {
+        setEntrando(false);
+        toast.error("Escolha uma senha com pelo menos 8 caracteres.");
+        return;
+      }
+      const criado = await criarPrimeiroAdmin({
+        data: { email: email.trim(), senha },
+      }).catch(() => ({ ok: false as const, erro: "Não foi possível criar o acesso." }));
+      if (!criado.ok) {
+        setEntrando(false);
+        toast.error(criado.erro ?? "Não foi possível criar o acesso.");
+        setPrimeiroAcesso(false);
+        return;
+      }
+      setPrimeiroAcesso(false);
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email: email.trim(),
       password: senha,
@@ -60,6 +89,7 @@ function AdminLogin() {
   if (carregando) {
     return <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">Verificando acesso...</div>;
   }
+
 
   return (
     <main className="grid min-h-screen place-items-center bg-background px-4">

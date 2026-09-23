@@ -62,28 +62,45 @@ function AdminLayout() {
 
     let ativo = true;
     setVerificando(true);
-    supabase.auth.getSession().then(({ data }) => {
+    const validar = async () => {
+      const { data } = await supabase.auth.getSession();
       if (!ativo) return;
-      if (data.session) {
+      const usuario = data.session?.user;
+      if (!usuario) {
+        setAutenticado(false);
+        setVerificando(false);
+        navigate({ to: "/admin/login" });
+        return;
+      }
+      const { data: ehAdmin } = await supabase.rpc("has_role", {
+        _user_id: usuario.id,
+        _role: "admin",
+      });
+      if (!ativo) return;
+      if (ehAdmin) {
         setAutenticado(true);
         setVerificando(false);
       } else {
+        await supabase.auth.signOut();
         setAutenticado(false);
         setVerificando(false);
+        navigate({ to: "/admin/login" });
+      }
+    };
+    void validar();
+
+
+    const { data } = supabase.auth.onAuthStateChange((evento, session) => {
+      if (!ativo || pathname === "/admin/login") return;
+      if (evento !== "SIGNED_IN" && evento !== "SIGNED_OUT" && evento !== "USER_UPDATED") return;
+      if (session) {
+        void validar();
+      } else {
+        setAutenticado(false);
         navigate({ to: "/admin/login" });
       }
     });
 
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!ativo || pathname === "/admin/login") return;
-      if (session) {
-        setAutenticado(true);
-        setVerificando(false);
-      } else {
-        setAutenticado(false);
-        navigate({ to: "/admin/login" });
-      }
-    });
 
     return () => {
       ativo = false;

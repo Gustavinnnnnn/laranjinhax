@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { TrendingUp, Clock, CircleDollarSign, ReceiptText } from "lucide-react";
-import { formatBRL, useDb } from "@/lib/store";
+import { formatBRL } from "@/lib/store";
+import { useVendas } from "@/lib/pagamentos-cloud";
 
 export const Route = createFileRoute("/admin/")({
   component: Dashboard,
@@ -17,7 +18,7 @@ const periodos = [
 type Periodo = (typeof periodos)[number]["id"];
 
 function Dashboard() {
-  const { vendas } = useDb();
+  const { vendas } = useVendas();
   const [periodo, setPeriodo] = useState<Periodo>("7d");
 
   const dias = periodos.find((p) => p.id === periodo)!.dias;

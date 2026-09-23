@@ -1,12 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Send, Video, Phone, X, Copy, Loader2, Sparkles } from "lucide-react";
+import { ArrowLeft, Send, Video, Phone, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { formatBRL, useDb } from "@/lib/store";
 import { Conversation, ConversationContent, ConversationScrollButton } from "@/components/ai-elements/conversation";
 import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 import { PromptInput, PromptInputFooter, PromptInputSubmit, PromptInputTextarea } from "@/components/ai-elements/prompt-input";
 import { useImagem } from "@/lib/imagem-storage";
+import { PagamentoPix } from "@/components/pagamento-pix";
+
 
 export const Route = createFileRoute("/conversas/$id")({
   head: () => ({ meta: [{ title: "Conversa privada — Vínculo" }, { name: "description", content: "Converse em tempo real e inicie uma chamada de vídeo." }, { property: "og:title", content: "Conversa privada — Vínculo" }, { property: "og:description", content: "Converse em tempo real e inicie uma chamada de vídeo." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
@@ -15,12 +17,12 @@ export const Route = createFileRoute("/conversas/$id")({
 
 function Conversa() {
   const { id } = Route.useParams();
-  const { modelos, config, conversas, pensando, enviar, registrarVenda, marcarPago } = useDb();
+  const { modelos, config, conversas, pensando, enviar } = useDb();
   const navigate = useNavigate();
   const perfil = modelos.find((m) => m.id === id);
   const [texto, setTexto] = useState("");
   const [pagamento, setPagamento] = useState(false);
-  const [processando, setProcessando] = useState(false);
+
   const fim = useRef<HTMLDivElement>(null);
 
   const mensagens = perfil ? (conversas[id] ?? []) : [];
@@ -47,17 +49,6 @@ function Conversa() {
 
   const irParaChamada = () => navigate({ to: "/chamada/$id", params: { id }, search: { min: minutos } });
 
-  const finalizarPagamento = () => {
-    const venda = registrarVenda({ modeloId: perfil.id, modeloNome: perfil.nome, minutos, valor });
-    setProcessando(true);
-    window.setTimeout(() => {
-      marcarPago(venda);
-      setProcessando(false);
-      setPagamento(false);
-      toast.success("Pagamento confirmado");
-      irParaChamada();
-    }, 900);
-  };
 
   return (
     <main className="relative mx-auto flex h-[100dvh] w-full max-w-[680px] flex-col overflow-hidden bg-[#efeae2] text-slate-900 shadow-2xl">
@@ -131,16 +122,21 @@ function Conversa() {
       </div>
 
       {pagamento && (
-        <div className="fixed inset-0 z-30 flex items-end bg-slate-900/50 sm:items-center sm:justify-center">
-          <div className="w-full rounded-t-3xl bg-white p-5 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl sm:mx-4 sm:max-w-md sm:rounded-3xl">
-            <div className="flex items-center justify-between"><div><p className="font-display text-xl">Iniciar chamada</p><p className="text-xs text-slate-500">{perfil.nome} · {minutos} minutos</p></div><button onClick={() => !processando && setPagamento(false)} className="grid size-9 place-items-center rounded-full bg-slate-100 text-slate-600"><X className="size-4" /></button></div>
-            <div className="mt-4 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200"><div className="flex justify-between text-sm"><span className="text-slate-500">Total</span><strong>{formatBRL(valor)}</strong></div></div>
-            {config.chavePix && <div className="mt-3 flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-3"><div className="min-w-0 flex-1"><p className="text-[10px] font-bold uppercase text-slate-400">Pix</p><p className="truncate text-xs">{config.chavePix}</p></div><button onClick={() => { void navigator.clipboard?.writeText(config.chavePix); toast.success("Pix copiado"); }} className="grid size-9 place-items-center rounded-xl bg-slate-100"><Copy className="size-4" /></button></div>}
-            <button disabled={processando} onClick={finalizarPagamento} className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3.5 text-sm font-bold text-white disabled:opacity-60">{processando && <Loader2 className="size-4 animate-spin" />}{processando ? "Confirmando…" : "Confirmar e entrar na chamada"}</button>
-            <p className="mt-2 text-center text-[10px] text-slate-400">Modo de demonstração</p>
-          </div>
-        </div>
+        <PagamentoPix
+          modeloId={perfil.id}
+          modeloNome={perfil.nome}
+          minutos={minutos}
+          valor={valor}
+          clienteRotulo={config.nomeSite || "Cliente"}
+          onFechar={() => setPagamento(false)}
+          onPago={() => {
+            setPagamento(false);
+            toast.success("Pagamento confirmado");
+            irParaChamada();
+          }}
+        />
       )}
+
     </main>
   );
 }
