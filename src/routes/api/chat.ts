@@ -53,13 +53,17 @@ export const Route = createFileRoute("/api/chat")({
           // Aguarda o primeiro trecho para detectar falha antes de responder.
           const stream = result.textStream[Symbol.asyncIterator]();
           const primeiro = await stream.next();
+          let inicioEnviado = false;
           const corpo = new ReadableStream<Uint8Array>({
             async pull(controller) {
               const cod = new TextEncoder();
-              if (!primeiro.done && primeiro.value) {
+              if (!inicioEnviado) {
+                inicioEnviado = true;
+                if (primeiro.done) {
+                  controller.close();
+                  return;
+                }
                 controller.enqueue(cod.encode(primeiro.value));
-                primeiro.done = true;
-                primeiro.value = "";
                 return;
               }
               const proximo = await stream.next();
@@ -67,6 +71,7 @@ export const Route = createFileRoute("/api/chat")({
               else controller.enqueue(cod.encode(proximo.value));
             },
           });
+
           return new Response(corpo, {
             headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
           });
