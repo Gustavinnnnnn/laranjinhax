@@ -56,7 +56,7 @@ export const Route = createFileRoute("/api/chat")({
             resposta = text.trim();
             if (resposta.split(/\s+/).length >= 5) break;
           }
-          if (resposta.split(/\s+/).length < 5) throw new Error("resposta incompleta");
+          if (!resposta) throw new Error("resposta vazia");
           return new Response(resposta, {
             headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
           });
@@ -75,7 +75,7 @@ export const Route = createFileRoute("/api/chat")({
             return await gerar(
               lovableKey,
               "https://ai.gateway.lovable.dev/v1",
-              "google/gemini-3.8-flash",
+              "google/gemini-2.5-flash",
             );
           } catch (erro) {
             console.error("[chat] IA alternativa falhou", (erro as Error).message);
