@@ -44,15 +44,19 @@ export const Route = createFileRoute("/api/chat")({
 
         const gerar = async (apiKey: string, baseURL: string, modelo: string) => {
           const provedor = createOpenAI({ baseURL, apiKey });
-          const { text } = await generateText({
-            model: provedor.chat(modelo),
-            system,
-            messages: mensagens,
-            temperature: 0.8,
-            maxOutputTokens: 220,
-          });
-          const resposta = text.trim();
-          if (!resposta) throw new Error("resposta vazia");
+          let resposta = "";
+          for (let tentativa = 0; tentativa < 2; tentativa += 1) {
+            const { text } = await generateText({
+              model: provedor.chat(modelo),
+              system,
+              messages: mensagens,
+              temperature: 0.75,
+              maxOutputTokens: 220,
+            });
+            resposta = text.trim();
+            if (resposta.split(/\s+/).length >= 5) break;
+          }
+          if (resposta.split(/\s+/).length < 5) throw new Error("resposta incompleta");
           return new Response(resposta, {
             headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
           });
