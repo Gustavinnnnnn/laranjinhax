@@ -80,9 +80,15 @@ async function chamar(
       continue;
     }
 
-    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    const texto = await res.text();
+    let body: Record<string, unknown> = {};
+    try {
+      body = JSON.parse(texto) as Record<string, unknown>;
+    } catch {
+      body = {};
+    }
     if (!res.ok) {
-      console.error("[syncpay] erro HTTP", caminho, res.status);
+      console.error("[syncpay] erro HTTP", caminho, res.status, texto.slice(0, 400));
       const mensagem =
         res.status === 422
           ? "Dados do pagamento inválidos. Confira nome, CPF, e-mail e telefone."
@@ -91,6 +97,7 @@ async function chamar(
             : "A cobrança não pôde ser gerada agora. Tente novamente em instantes.";
       throw new ErroSyncPay(res.status, mensagem);
     }
+
     return body;
   }
 }

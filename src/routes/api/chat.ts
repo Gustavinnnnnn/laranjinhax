@@ -15,7 +15,7 @@ const Entrada = z.object({
   mensagens: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string() })),
 });
 
-const MODELO_IA = "meta/llama-3.3-70b-instruct";
+const MODELO_IA = "nvidia/llama-3.1-nemotron-70b-instruct";
 
 export const Route = createFileRoute("/api/chat")({
   server: {
