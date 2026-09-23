@@ -21,6 +21,9 @@ import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ChamadaIdRouteImport } from './routes/chamada.$id'
 import { Route as ConversasIdRouteImport } from './routes/conversas.$id'
+import { Route as ApiPublicDepositsCreateRouteImport } from './routes/api/public/deposits/create'
+import { Route as ApiPublicSyncpayWebhookRouteImport } from './routes/api/public/syncpay/webhook'
+import { Route as ApiPublicDepositsIdStatusRouteImport } from './routes/api/public/deposits/$id/status'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -82,6 +85,22 @@ const ConversasIdRoute = ConversasIdRouteImport.update({
   path: '/conversas/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicDepositsCreateRoute = ApiPublicDepositsCreateRouteImport.update({
+  id: '/api/public/deposits/create',
+  path: '/api/public/deposits/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicSyncpayWebhookRoute = ApiPublicSyncpayWebhookRouteImport.update({
+  id: '/api/public/syncpay/webhook',
+  path: '/api/public/syncpay/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicDepositsIdStatusRoute =
+  ApiPublicDepositsIdStatusRouteImport.update({
+    id: '/api/public/deposits/$id/status',
+    path: '/api/public/deposits/$id/status',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +115,9 @@ export interface FileRoutesByFullPath {
   '/chamada/$id': typeof ChamadaIdRoute
   '/conversas/$id': typeof ConversasIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/deposits/create': typeof ApiPublicDepositsCreateRoute
+  '/api/public/syncpay/webhook': typeof ApiPublicSyncpayWebhookRoute
+  '/api/public/deposits/$id/status': typeof ApiPublicDepositsIdStatusRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -109,6 +131,9 @@ export interface FileRoutesByTo {
   '/chamada/$id': typeof ChamadaIdRoute
   '/conversas/$id': typeof ConversasIdRoute
   '/admin': typeof AdminIndexRoute
+  '/api/public/deposits/create': typeof ApiPublicDepositsCreateRoute
+  '/api/public/syncpay/webhook': typeof ApiPublicSyncpayWebhookRoute
+  '/api/public/deposits/$id/status': typeof ApiPublicDepositsIdStatusRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -124,6 +149,9 @@ export interface FileRoutesById {
   '/chamada/$id': typeof ChamadaIdRoute
   '/conversas/$id': typeof ConversasIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/deposits/create': typeof ApiPublicDepositsCreateRoute
+  '/api/public/syncpay/webhook': typeof ApiPublicSyncpayWebhookRoute
+  '/api/public/deposits/$id/status': typeof ApiPublicDepositsIdStatusRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -140,6 +168,9 @@ export interface FileRouteTypes {
     | '/chamada/$id'
     | '/conversas/$id'
     | '/admin/'
+    | '/api/public/deposits/create'
+    | '/api/public/syncpay/webhook'
+    | '/api/public/deposits/$id/status'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -153,6 +184,9 @@ export interface FileRouteTypes {
     | '/chamada/$id'
     | '/conversas/$id'
     | '/admin'
+    | '/api/public/deposits/create'
+    | '/api/public/syncpay/webhook'
+    | '/api/public/deposits/$id/status'
   id:
     | '__root__'
     | '/'
@@ -167,6 +201,9 @@ export interface FileRouteTypes {
     | '/chamada/$id'
     | '/conversas/$id'
     | '/admin/'
+    | '/api/public/deposits/create'
+    | '/api/public/syncpay/webhook'
+    | '/api/public/deposits/$id/status'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -175,6 +212,9 @@ export interface RootRouteChildren {
   ApiChatRoute: typeof ApiChatRoute
   ChamadaIdRoute: typeof ChamadaIdRoute
   ConversasIdRoute: typeof ConversasIdRoute
+  ApiPublicDepositsCreateRoute: typeof ApiPublicDepositsCreateRoute
+  ApiPublicSyncpayWebhookRoute: typeof ApiPublicSyncpayWebhookRoute
+  ApiPublicDepositsIdStatusRoute: typeof ApiPublicDepositsIdStatusRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -263,6 +303,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConversasIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/deposits/create': {
+      id: '/api/public/deposits/create'
+      path: '/api/public/deposits/create'
+      fullPath: '/api/public/deposits/create'
+      preLoaderRoute: typeof ApiPublicDepositsCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/syncpay/webhook': {
+      id: '/api/public/syncpay/webhook'
+      path: '/api/public/syncpay/webhook'
+      fullPath: '/api/public/syncpay/webhook'
+      preLoaderRoute: typeof ApiPublicSyncpayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/deposits/$id/status': {
+      id: '/api/public/deposits/$id/status'
+      path: '/api/public/deposits/$id/status'
+      fullPath: '/api/public/deposits/$id/status'
+      preLoaderRoute: typeof ApiPublicDepositsIdStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -294,6 +355,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatRoute: ApiChatRoute,
   ChamadaIdRoute: ChamadaIdRoute,
   ConversasIdRoute: ConversasIdRoute,
+  ApiPublicDepositsCreateRoute: ApiPublicDepositsCreateRoute,
+  ApiPublicSyncpayWebhookRoute: ApiPublicSyncpayWebhookRoute,
+  ApiPublicDepositsIdStatusRoute: ApiPublicDepositsIdStatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
