@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      modelos: {
+        Row: {
+          ativo: boolean
+          criado_em: string
+          descricao: string
+          duracoes: number[]
+          foto: string
+          foto_fundo_chat: string
+          id: string
+          idade: number
+          nome: string
+          online: boolean
+          preco_por_minuto: number
+          video_chamada_url: string
+        }
+        Insert: {
+          ativo?: boolean
+          criado_em?: string
+          descricao?: string
+          duracoes?: number[]
+          foto?: string
+          foto_fundo_chat?: string
+          id?: string
+          idade?: number
+          nome?: string
+          online?: boolean
+          preco_por_minuto?: number
+          video_chamada_url?: string
+        }
+        Update: {
+          ativo?: boolean
+          criado_em?: string
+          descricao?: string
+          duracoes?: number[]
+          foto?: string
+          foto_fundo_chat?: string
+          id?: string
+          idade?: number
+          nome?: string
+          online?: boolean
+          preco_por_minuto?: number
+          video_chamada_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
