@@ -131,16 +131,21 @@ function Conversa() {
       </div>
 
       {pagamento && (
-        <div className="fixed inset-0 z-30 flex items-end bg-slate-900/50 sm:items-center sm:justify-center">
-          <div className="w-full rounded-t-3xl bg-white p-5 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl sm:mx-4 sm:max-w-md sm:rounded-3xl">
-            <div className="flex items-center justify-between"><div><p className="font-display text-xl">Iniciar chamada</p><p className="text-xs text-slate-500">{perfil.nome} · {minutos} minutos</p></div><button onClick={() => !processando && setPagamento(false)} className="grid size-9 place-items-center rounded-full bg-slate-100 text-slate-600"><X className="size-4" /></button></div>
-            <div className="mt-4 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200"><div className="flex justify-between text-sm"><span className="text-slate-500">Total</span><strong>{formatBRL(valor)}</strong></div></div>
-            {config.chavePix && <div className="mt-3 flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-3"><div className="min-w-0 flex-1"><p className="text-[10px] font-bold uppercase text-slate-400">Pix</p><p className="truncate text-xs">{config.chavePix}</p></div><button onClick={() => { void navigator.clipboard?.writeText(config.chavePix); toast.success("Pix copiado"); }} className="grid size-9 place-items-center rounded-xl bg-slate-100"><Copy className="size-4" /></button></div>}
-            <button disabled={processando} onClick={finalizarPagamento} className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3.5 text-sm font-bold text-white disabled:opacity-60">{processando && <Loader2 className="size-4 animate-spin" />}{processando ? "Confirmando…" : "Confirmar e entrar na chamada"}</button>
-            <p className="mt-2 text-center text-[10px] text-slate-400">Modo de demonstração</p>
-          </div>
-        </div>
+        <PagamentoPix
+          modeloId={perfil.id}
+          modeloNome={perfil.nome}
+          minutos={minutos}
+          valor={valor}
+          clienteRotulo={cliente}
+          onFechar={() => setPagamento(false)}
+          onPago={() => {
+            setPagamento(false);
+            toast.success("Pagamento confirmado");
+            irParaChamada();
+          }}
+        />
       )}
+
     </main>
   );
 }
