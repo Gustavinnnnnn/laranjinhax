@@ -3,6 +3,7 @@ import QRCode from "qrcode";
 import { Check, Copy, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { formatBRL } from "@/lib/store";
+import { Button } from "@/components/ui/button";
 
 type Etapa = "dados" | "gerando" | "pix" | "confirmado" | "falhou";
 
@@ -138,42 +139,44 @@ export function PagamentoPix({
   const podeGerar = form.nome.trim().length >= 3 && soDigitos(form.cpf).length === 11 && form.email.includes("@") && soDigitos(form.telefone).length >= 10;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-end bg-slate-900/60 sm:items-center sm:justify-center">
-      <div className="w-full rounded-t-3xl bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl sm:mx-4 sm:max-w-md sm:rounded-3xl">
+    <div className="fixed inset-0 z-40 flex items-end bg-ink/70 backdrop-blur-sm sm:items-center sm:justify-center">
+      <div className="w-full rounded-t-2xl bg-background p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl sm:mx-4 sm:max-w-md sm:rounded-2xl">
         <div className="flex items-start justify-between">
           <div>
-            <p className="font-display text-xl">Pagar com Pix</p>
-            <p className="text-xs text-slate-500">
+            <p className="font-display text-xl font-bold">Pagar com Pix</p>
+            <p className="text-xs text-muted-foreground">
               {modeloNome} · {minutos} minutos
             </p>
           </div>
-          <button
+          <Button
             onClick={onFechar}
             aria-label="Fechar"
-            className="grid size-9 place-items-center rounded-full bg-slate-100 text-slate-600"
+            variant="ghost"
+            size="icon"
+            className="rounded-full text-muted-foreground"
           >
             <X className="size-4" />
-          </button>
+          </Button>
         </div>
 
-        <p className="mt-4 text-center font-display text-3xl">{formatBRL(deposito?.amount ?? valor)}</p>
+        <p className="mt-4 text-center font-display text-3xl font-bold text-ink">{formatBRL(deposito?.amount ?? valor)}</p>
 
         {etapa === "dados" && (
           <div className="mt-4 space-y-2.5">
-            <p className="text-center text-xs text-slate-500">Confirme seus dados para gerar o Pix.</p>
+            <p className="text-center text-xs text-muted-foreground">Confirme seus dados para gerar o Pix.</p>
             <input
               value={form.nome}
               onChange={(e) => setForm({ ...form, nome: e.target.value })}
               placeholder="Nome completo"
               autoComplete="name"
-              className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:ring-2 focus:ring-brand/30"
+              className="h-11 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-brand/30"
             />
             <input
               value={form.cpf}
               onChange={(e) => setForm({ ...form, cpf: mascaraCpf(e.target.value) })}
               placeholder="CPF"
               inputMode="numeric"
-              className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:ring-2 focus:ring-brand/30"
+              className="h-11 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-brand/30"
             />
             <input
               value={form.email}
@@ -181,7 +184,7 @@ export function PagamentoPix({
               placeholder="E-mail"
               inputMode="email"
               autoComplete="email"
-              className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:ring-2 focus:ring-brand/30"
+              className="h-11 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-brand/30"
             />
             <input
               value={form.telefone}
@@ -189,21 +192,21 @@ export function PagamentoPix({
               placeholder="Telefone com DDD"
               inputMode="tel"
               autoComplete="tel"
-              className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:ring-2 focus:ring-brand/30"
+              className="h-11 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-brand/30"
             />
             {erro && <p className="text-center text-xs font-medium text-red-600">{erro}</p>}
-            <button
+            <Button
               onClick={() => void gerar()}
               disabled={!podeGerar}
-              className="mt-1 h-12 w-full rounded-xl bg-brand text-sm font-bold text-white shadow-lg shadow-brand/20 disabled:opacity-50"
+              className="mt-1 h-12 w-full rounded-xl bg-brand text-sm font-bold text-primary-foreground shadow-lg shadow-brand/20 hover:bg-brand/90"
             >
               Gerar Pix
-            </button>
+            </Button>
           </div>
         )}
 
         {etapa === "gerando" && (
-          <div className="mt-8 mb-6 flex flex-col items-center gap-3 text-slate-600">
+          <div className="mt-8 mb-6 flex flex-col items-center gap-3 text-muted-foreground">
             <Loader2 className="size-7 animate-spin text-brand" />
             <p className="text-sm">Gerando Pix…</p>
           </div>
@@ -215,25 +218,25 @@ export function PagamentoPix({
               <img
                 src={qr}
                 alt="QR Code do Pix"
-                className="mx-auto size-56 rounded-2xl ring-1 ring-slate-200"
+                className="mx-auto size-56 rounded-xl ring-1 ring-border"
               />
             )}
-            <p className="mt-3 text-center text-xs text-slate-500">
+            <p className="mt-3 text-center text-xs text-muted-foreground">
               Escaneie o QR Code pelo aplicativo do seu banco
             </p>
-            <p className="mt-4 text-[10px] font-bold uppercase tracking-wide text-slate-400">Pix copia e cola</p>
-            <p className="mt-1 max-h-20 overflow-y-auto break-all rounded-xl bg-slate-50 p-3 text-[11px] leading-relaxed text-slate-600 ring-1 ring-slate-200">
+            <p className="mt-4 text-[10px] font-bold uppercase text-muted-foreground">Pix copia e cola</p>
+            <p className="mt-1 max-h-20 overflow-y-auto break-all rounded-lg bg-muted p-3 text-[11px] leading-relaxed text-muted-foreground ring-1 ring-border">
               {deposito.pixCode}
             </p>
-            <button
+            <Button
               onClick={() => void copiar()}
-              className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-white shadow-lg shadow-brand/20"
+              className="mt-3 h-12 w-full rounded-xl bg-brand text-sm font-bold text-primary-foreground shadow-lg shadow-brand/20 hover:bg-brand/90"
             >
               {copiado ? <Check className="size-4" /> : <Copy className="size-4" />}
               {copiado ? "Código copiado!" : "Copiar código Pix"}
-            </button>
-            <div className="mt-3 flex items-center justify-center gap-2 text-xs font-medium text-amber-600">
-              <span className="size-2 animate-pulse rounded-full bg-amber-500" />
+            </Button>
+            <div className="mt-3 flex items-center justify-center gap-2 text-xs font-medium text-brand">
+              <span className="size-2 animate-pulse rounded-full bg-brand" />
               Aguardando pagamento…
             </div>
           </div>
@@ -245,30 +248,30 @@ export function PagamentoPix({
               <Check className="size-7" />
             </div>
             <p className="mt-3 font-display text-xl">Pagamento confirmado!</p>
-            <p className="mt-1 text-xs text-slate-500">Sua chamada já está liberada.</p>
-            <button
+             <p className="mt-1 text-xs text-muted-foreground">Sua chamada já está liberada.</p>
+             <Button
               onClick={onPago}
-              className="mt-5 h-12 w-full rounded-xl bg-brand text-sm font-bold text-white shadow-lg shadow-brand/20"
+               className="mt-5 h-12 w-full rounded-xl bg-brand text-sm font-bold text-primary-foreground shadow-lg shadow-brand/20 hover:bg-brand/90"
             >
               Continuar
-            </button>
+             </Button>
           </div>
         )}
 
         {etapa === "falhou" && (
           <div className="mt-6 text-center">
             <p className="font-display text-lg">O pagamento não foi concluído</p>
-            <p className="mt-1 text-xs text-slate-500">Você pode tentar gerar um novo Pix.</p>
-            <button
+             <p className="mt-1 text-xs text-muted-foreground">Você pode tentar gerar um novo Pix.</p>
+             <Button
               onClick={() => {
                 setDeposito(null);
                 setQr("");
                 setEtapa("dados");
               }}
-              className="mt-5 h-12 w-full rounded-xl bg-brand text-sm font-bold text-white"
+               className="mt-5 h-12 w-full rounded-xl bg-brand text-sm font-bold text-primary-foreground hover:bg-brand/90"
             >
               Tentar de novo
-            </button>
+             </Button>
           </div>
         )}
       </div>

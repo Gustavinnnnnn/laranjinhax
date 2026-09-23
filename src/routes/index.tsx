@@ -5,7 +5,7 @@ import { useDb } from "@/lib/store";
 import { useImagem } from "@/lib/imagem-storage";
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "Vínculo — descubra e converse" }, { name: "description", content: "Conheça novos perfis, converse e faça chamadas de vídeo." }, { property: "og:title", content: "Vínculo — descubra e converse" }, { property: "og:description", content: "Conheça novos perfis e comece uma conversa agora." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  head: () => ({ meta: [{ title: "Laranjinha — descubra e converse" }, { name: "description", content: "Conheça novos perfis, converse e faça chamadas de vídeo." }, { property: "og:title", content: "Laranjinha — descubra e converse" }, { property: "og:description", content: "Conheça novos perfis e comece uma conversa agora." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: Descobrir,
 });
 

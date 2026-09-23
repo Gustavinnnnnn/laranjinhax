@@ -9,11 +9,11 @@ export type Venda = { id:string; modeloId:string; modeloNome:string; minutos:num
 export type Config = { nomeSite:string; descricao:string; provedorPagamento:"simulado"; chavePix:string; parceiroA:string; parceiroB:string };
 export type Msg = { id:string; role:"user"|"assistant"; texto:string; hora:string };
 type Db={modelos:Modelo[];vendas:Venda[];config:Config;conversas:Record<string,Msg[]>};
-const PADRAO_CONFIG:Config={nomeSite:"Vínculo",descricao:"Conheça pessoas, converse e faça chamadas de vídeo.",provedorPagamento:"simulado",chavePix:"",parceiroA:"Você",parceiroB:"Sócio"};
+const PADRAO_CONFIG:Config={nomeSite:"Laranjinha",descricao:"Conheça pessoas, converse e faça chamadas de vídeo.",provedorPagamento:"simulado",chavePix:"",parceiroA:"Você",parceiroB:"Sócio"};
 const inicial:Db={modelos:[],vendas:[],config:PADRAO_CONFIG,conversas:{}};
 const KEY="vinculo-db-v1", KEY_CLIENTE="vinculo-cliente-v1";
 const agora=()=>new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-const carregar=():Db=>{try{const raw=localStorage.getItem(KEY);if(!raw)return inicial;const p=JSON.parse(raw) as Partial<Db>;return{modelos:[],vendas:p.vendas??[],config:{...PADRAO_CONFIG,...(p.config??{})},conversas:p.conversas??{}}}catch{return inicial}};
+const carregar=():Db=>{try{const raw=localStorage.getItem(KEY);if(!raw)return inicial;const p=JSON.parse(raw) as Partial<Db>;const config={...PADRAO_CONFIG,...(p.config??{})};if(config.nomeSite==="Vínculo")config.nomeSite="Laranjinha";return{modelos:[],vendas:p.vendas??[],config,conversas:p.conversas??{}}}catch{return inicial}};
 const rótuloCliente=()=>{try{let v=localStorage.getItem(KEY_CLIENTE);if(!v){v=`Cliente #${Math.floor(1000+Math.random()*9000)}`;localStorage.setItem(KEY_CLIENTE,v)}return v}catch{return"Cliente"}};
 type Ctx={modelos:Modelo[];carregando:boolean;vendas:Venda[];config:Config;conversas:Record<string,Msg[]>;pensando:Record<string,boolean>;cliente:string;salvarModelo:(m:Modelo)=>Promise<void>;removerModelo:(id:string)=>Promise<void>;atualizarConfig:(c:Partial<Config>)=>void;registrarVenda:(v:Omit<Venda,"id"|"criadoEm"|"status"|"cliente"|"pagoEm">)=>string;marcarPago:(id:string)=>void;cancelarVenda:(id:string)=>void;enviar:(modeloId:string,texto:string)=>Promise<void>};
 const Ctx=createContext<Ctx|null>(null);
