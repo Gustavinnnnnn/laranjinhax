@@ -70,7 +70,7 @@ function Conversa() {
           <ArrowLeft className="size-4" />
         </Link>
         <div className="relative shrink-0">
-          <img src={fotoSrc} alt={perfil.nome} className="size-12 rounded-full object-cover p-0.5 ring-2 ring-brand/55" />
+          {fotoSrc ? <img src={fotoSrc} alt={perfil.nome} className="size-12 rounded-full object-cover p-0.5 ring-2 ring-brand/55" /> : <div className="size-12 rounded-full bg-background/10 p-0.5 ring-2 ring-brand/55" aria-hidden="true" />}
           <span className="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-ink bg-emerald-500" />
         </div>
         <div className="min-w-0 flex-1">
