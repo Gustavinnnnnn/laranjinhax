@@ -90,16 +90,17 @@ function AdminLayout() {
     void validar();
 
 
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((evento, session) => {
       if (!ativo || pathname === "/admin/login") return;
+      if (evento !== "SIGNED_IN" && evento !== "SIGNED_OUT" && evento !== "USER_UPDATED") return;
       if (session) {
-        setAutenticado(true);
-        setVerificando(false);
+        void validar();
       } else {
         setAutenticado(false);
         navigate({ to: "/admin/login" });
       }
     });
+
 
     return () => {
       ativo = false;
