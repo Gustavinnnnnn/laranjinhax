@@ -3,11 +3,13 @@ import { useState } from "react";
 import { Banknote, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { formatBRL, useDb } from "@/lib/store";
+import { useVendas } from "@/lib/pagamentos-cloud";
 
 export const Route = createFileRoute("/admin/carteira")({ component: Carteira });
 
 function Carteira() {
-  const { vendas, config } = useDb();
+  const { config } = useDb();
+  const { vendas } = useVendas();
   const [saques, setSaques] = useState<Record<string, number>>({});
   const pagas = vendas.filter((v) => v.status === "pago");
   const totalPago = pagas.reduce((s,v)=>s+v.valor,0);

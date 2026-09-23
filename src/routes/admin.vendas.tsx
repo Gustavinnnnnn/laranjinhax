@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { CircleCheck, Trash2 } from "lucide-react";
-import { toast } from "sonner";
-import { formatBRL, useDb } from "@/lib/store";
+import { formatBRL } from "@/lib/store";
+import { useVendas } from "@/lib/pagamentos-cloud";
 
 export const Route = createFileRoute("/admin/vendas")({ component: Vendas });
 
@@ -14,7 +13,7 @@ const filtros = [
 type Filtro = (typeof filtros)[number]["id"];
 
 function Vendas() {
-  const { vendas, marcarPago, cancelarVenda } = useDb();
+  const { vendas } = useVendas();
   const [filtro, setFiltro] = useState<Filtro>("todas");
   const lista = vendas.filter((v) => filtro === "todas" ? true : filtro === "pagas" ? v.status === "pago" : v.status === "pendente");
   return <div className="space-y-4">
