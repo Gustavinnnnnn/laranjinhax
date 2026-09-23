@@ -9,7 +9,7 @@ export const Route = createFileRoute("/chamada/$id")({
   validateSearch: (search: Record<string, unknown>) => ({
     min: Number(search["min"]) > 0 ? Number(search["min"]) : 10,
   }),
-  head: () => ({ meta: [{ title: "Chamada — Vínculo" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Chamada — Laranjinha" }, { name: "description", content: "Chamada de vídeo privada na Laranjinha." }, { property: "og:title", content: "Chamada — Laranjinha" }, { property: "og:description", content: "Chamada de vídeo privada na Laranjinha." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
   component: Chamada,
 });
 
