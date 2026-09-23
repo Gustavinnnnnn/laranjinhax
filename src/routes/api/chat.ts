@@ -43,36 +43,16 @@ export const Route = createFileRoute("/api/chat")({
 
         const gerar = async (apiKey: string, baseURL: string, modelo: string) => {
           const provedor = createOpenAI({ baseURL, apiKey });
-          const result = streamText({
+          const { text } = await generateText({
             model: provedor.chat(modelo),
             system,
             messages: mensagens,
             temperature: 0.8,
             maxOutputTokens: 220,
           });
-          // Aguarda o primeiro trecho para detectar falha antes de responder.
-          const stream = result.textStream[Symbol.asyncIterator]();
-          const primeiro = await stream.next();
-          let inicioEnviado = false;
-          const corpo = new ReadableStream<Uint8Array>({
-            async pull(controller) {
-              const cod = new TextEncoder();
-              if (!inicioEnviado) {
-                inicioEnviado = true;
-                if (primeiro.done) {
-                  controller.close();
-                  return;
-                }
-                controller.enqueue(cod.encode(primeiro.value));
-                return;
-              }
-              const proximo = await stream.next();
-              if (proximo.done) controller.close();
-              else controller.enqueue(cod.encode(proximo.value));
-            },
-          });
-
-          return new Response(corpo, {
+          const resposta = text.trim();
+          if (!resposta) throw new Error("resposta vazia");
+          return new Response(resposta, {
             headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
           });
         };
@@ -87,13 +67,18 @@ export const Route = createFileRoute("/api/chat")({
 
         if (lovableKey) {
           try {
-            return await gerar(lovableKey, "https://ai.gateway.lovable.dev/v1", "google/gemini-3.8-flash");
+            return await gerar(
+              lovableKey,
+              "https://ai.gateway.lovable.dev/v1",
+              "google/gemini-3.8-flash",
+            );
           } catch (erro) {
             console.error("[chat] IA alternativa falhou", (erro as Error).message);
           }
         }
 
         return Response.json({ error: "A IA não conseguiu responder agora" }, { status: 502 });
+
 
       },
     },
