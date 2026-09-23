@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { criarPrimeiroAdmin, existeAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/login")({
+  head: () => ({ meta: [{ title: "Entrar no painel — Laranjinha" }, { name: "description", content: "Acesso reservado ao painel administrativo da Laranjinha." }, { property: "og:title", content: "Entrar no painel — Laranjinha" }, { property: "og:description", content: "Acesso reservado ao painel administrativo da Laranjinha." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
   component: AdminLogin,
 });
 
@@ -99,7 +100,7 @@ function AdminLogin() {
             <LockKeyhole className="size-6" />
           </div>
           <h1 className="font-display text-2xl">Painel administrativo</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Entre para acessar o Vínculo.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Entre para acessar a Laranjinha.</p>
         </div>
 
         <div className="space-y-3">

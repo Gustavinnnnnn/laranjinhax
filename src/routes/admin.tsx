@@ -18,9 +18,9 @@ import { supabase } from "@/lib/supabase";
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Painel — Vínculo" },
+      { title: "Painel — Laranjinha" },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Painel — Vínculo" },
+      { property: "og:title", content: "Painel — Laranjinha" },
       { property: "og:description", content: "Painel de administração." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -7,3 +7,5 @@
 - [x] Reduzir demora e aumentar coerência das respostas
 - [x] Atualizar metadados das páginas alteradas
 - [x] Validar os fluxos em celular e computador
+- [x] Aplicar a identidade Laranjinha ao chat e ao pagamento Pix
+- [x] Tornar as respostas mais acolhedoras, diretas e orientadas à chamada
