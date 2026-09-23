@@ -10,33 +10,171 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminCarteiraRouteImport } from './routes/admin.carteira'
+import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
+import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminModelosRouteImport } from './routes/admin.modelos'
+import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ChamadaIdRouteImport } from './routes/chamada.$id'
+import { Route as ConversasIdRouteImport } from './routes/conversas.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCarteiraRoute = AdminCarteiraRouteImport.update({
+  id: '/carteira',
+  path: '/carteira',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClientesRoute = AdminClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConfiguracoesRoute = AdminConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminModelosRoute = AdminModelosRouteImport.update({
+  id: '/modelos',
+  path: '/modelos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVendasRoute = AdminVendasRouteImport.update({
+  id: '/vendas',
+  path: '/vendas',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChamadaIdRoute = ChamadaIdRouteImport.update({
+  id: '/chamada/$id',
+  path: '/chamada/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConversasIdRoute = ConversasIdRouteImport.update({
+  id: '/conversas/$id',
+  path: '/conversas/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/carteira': typeof AdminCarteiraRoute
+  '/admin/clientes': typeof AdminClientesRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/modelos': typeof AdminModelosRoute
+  '/admin/vendas': typeof AdminVendasRoute
+  '/api/chat': typeof ApiChatRoute
+  '/chamada/$id': typeof ChamadaIdRoute
+  '/conversas/$id': typeof ConversasIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/carteira': typeof AdminCarteiraRoute
+  '/admin/clientes': typeof AdminClientesRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/modelos': typeof AdminModelosRoute
+  '/admin/vendas': typeof AdminVendasRoute
+  '/api/chat': typeof ApiChatRoute
+  '/chamada/$id': typeof ChamadaIdRoute
+  '/conversas/$id': typeof ConversasIdRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/carteira': typeof AdminCarteiraRoute
+  '/admin/clientes': typeof AdminClientesRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/modelos': typeof AdminModelosRoute
+  '/admin/vendas': typeof AdminVendasRoute
+  '/api/chat': typeof ApiChatRoute
+  '/chamada/$id': typeof ChamadaIdRoute
+  '/conversas/$id': typeof ConversasIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/admin/carteira'
+    | '/admin/clientes'
+    | '/admin/configuracoes'
+    | '/admin/login'
+    | '/admin/modelos'
+    | '/admin/vendas'
+    | '/api/chat'
+    | '/chamada/$id'
+    | '/conversas/$id'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin/carteira'
+    | '/admin/clientes'
+    | '/admin/configuracoes'
+    | '/admin/login'
+    | '/admin/modelos'
+    | '/admin/vendas'
+    | '/api/chat'
+    | '/chamada/$id'
+    | '/conversas/$id'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/admin/carteira'
+    | '/admin/clientes'
+    | '/admin/configuracoes'
+    | '/admin/login'
+    | '/admin/modelos'
+    | '/admin/vendas'
+    | '/api/chat'
+    | '/chamada/$id'
+    | '/conversas/$id'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  ApiChatRoute: typeof ApiChatRoute
+  ChamadaIdRoute: typeof ChamadaIdRoute
+  ConversasIdRoute: typeof ConversasIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +186,114 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/carteira': {
+      id: '/admin/carteira'
+      path: '/carteira'
+      fullPath: '/admin/carteira'
+      preLoaderRoute: typeof AdminCarteiraRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/clientes': {
+      id: '/admin/clientes'
+      path: '/clientes'
+      fullPath: '/admin/clientes'
+      preLoaderRoute: typeof AdminClientesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/configuracoes': {
+      id: '/admin/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/admin/configuracoes'
+      preLoaderRoute: typeof AdminConfiguracoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/modelos': {
+      id: '/admin/modelos'
+      path: '/modelos'
+      fullPath: '/admin/modelos'
+      preLoaderRoute: typeof AdminModelosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vendas': {
+      id: '/admin/vendas'
+      path: '/vendas'
+      fullPath: '/admin/vendas'
+      preLoaderRoute: typeof AdminVendasRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chamada/$id': {
+      id: '/chamada/$id'
+      path: '/chamada/$id'
+      fullPath: '/chamada/$id'
+      preLoaderRoute: typeof ChamadaIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conversas/$id': {
+      id: '/conversas/$id'
+      path: '/conversas/$id'
+      fullPath: '/conversas/$id'
+      preLoaderRoute: typeof ConversasIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminCarteiraRoute: typeof AdminCarteiraRoute
+  AdminClientesRoute: typeof AdminClientesRoute
+  AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminModelosRoute: typeof AdminModelosRoute
+  AdminVendasRoute: typeof AdminVendasRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminCarteiraRoute: AdminCarteiraRoute,
+  AdminClientesRoute: AdminClientesRoute,
+  AdminConfiguracoesRoute: AdminConfiguracoesRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminModelosRoute: AdminModelosRoute,
+  AdminVendasRoute: AdminVendasRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  ApiChatRoute: ApiChatRoute,
+  ChamadaIdRoute: ChamadaIdRoute,
+  ConversasIdRoute: ConversasIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
