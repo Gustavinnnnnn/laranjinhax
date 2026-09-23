@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { formatBRL, useDb } from "@/lib/store";
 import { Conversation, ConversationContent, ConversationScrollButton } from "@/components/ai-elements/conversation";
 import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
-import { PromptInput, PromptInputFooter, PromptInputSubmit, PromptInputTextarea } from "@/components/ai-elements/prompt-input";
+import { PromptInput, PromptInputSubmit, PromptInputTextarea } from "@/components/ai-elements/prompt-input";
 import { useImagem } from "@/lib/imagem-storage";
 import { PagamentoPix } from "@/components/pagamento-pix";
 import { Button } from "@/components/ui/button";
@@ -125,11 +125,9 @@ function Conversa() {
       </Conversation>
 
       <div className="relative z-10 shrink-0 px-4 pb-[max(.75rem,env(safe-area-inset-bottom))] pt-2">
-        <PromptInput onSubmit={() => enviarMensagem()} className="rounded-2xl border border-background/70 bg-chat-surface-strong p-1.5 shadow-xl backdrop-blur-2xl">
-          <PromptInputTextarea ref={campo} value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Sua mensagem..." className="min-h-11 resize-none bg-transparent py-3 pl-3 text-[14px]" />
-          <PromptInputFooter className="justify-end pr-0">
-            <PromptInputSubmit status={pensando[id] ? "submitted" : "ready"} disabled={!texto.trim() || pensando[id]} aria-label="Enviar mensagem" className="size-10 rounded-xl bg-brand text-primary-foreground shadow-md hover:bg-brand/90"><Send className="size-[17px]" /></PromptInputSubmit>
-          </PromptInputFooter>
+        <PromptInput onSubmit={() => enviarMensagem()} className="relative rounded-2xl border border-background/70 bg-chat-surface-strong p-1.5 shadow-xl backdrop-blur-2xl">
+          <PromptInputTextarea ref={campo} rows={1} value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Sua mensagem..." className="min-h-11 resize-none bg-transparent py-3 pl-3 pr-14 text-[14px]" />
+          <PromptInputSubmit status={pensando[id] ? "submitted" : "ready"} disabled={!texto.trim() || pensando[id]} aria-label="Enviar mensagem" className="absolute bottom-2 right-2 size-10 rounded-xl bg-brand text-primary-foreground shadow-md hover:bg-brand/90"><Send className="size-[17px]" /></PromptInputSubmit>
         </PromptInput>
       </div>
 
