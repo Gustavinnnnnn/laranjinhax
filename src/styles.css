@@ -61,14 +61,18 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-brand: var(--brand);
   --color-ink: var(--ink);
-  --font-display: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --color-chat-surface: var(--chat-surface);
+  --color-chat-surface-strong: var(--chat-surface-strong);
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
   --radius: 0.625rem;
-  --brand: oklch(0.63 0.19 12);
-  --ink: oklch(0.19 0.03 320);
+  --brand: oklch(0.67 0.22 43);
+  --ink: oklch(0.18 0 0);
+  --chat-surface: oklch(1 0 0 / 88%);
+  --chat-surface-strong: oklch(1 0 0 / 96%);
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);

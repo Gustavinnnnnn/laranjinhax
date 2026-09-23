@@ -9,7 +9,7 @@ export type Venda = { id:string; modeloId:string; modeloNome:string; minutos:num
 export type Config = { nomeSite:string; descricao:string; provedorPagamento:"simulado"; chavePix:string; parceiroA:string; parceiroB:string };
 export type Msg = { id:string; role:"user"|"assistant"; texto:string; hora:string };
 type Db={modelos:Modelo[];vendas:Venda[];config:Config;conversas:Record<string,Msg[]>};
-const PADRAO_CONFIG:Config={nomeSite:"Vínculo",descricao:"Conheça pessoas, converse e faça chamadas de vídeo.",provedorPagamento:"simulado",chavePix:"",parceiroA:"Você",parceiroB:"Sócio"};
+const PADRAO_CONFIG:Config={nomeSite:"Laranjinha",descricao:"Conheça pessoas, converse e faça chamadas de vídeo.",provedorPagamento:"simulado",chavePix:"",parceiroA:"Você",parceiroB:"Sócio"};
 const inicial:Db={modelos:[],vendas:[],config:PADRAO_CONFIG,conversas:{}};
 const KEY="vinculo-db-v1", KEY_CLIENTE="vinculo-cliente-v1";
 const agora=()=>new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
