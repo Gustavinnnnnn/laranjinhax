@@ -1,12 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Send, Video, Phone, X, Copy, Loader2, Sparkles } from "lucide-react";
+import { ArrowLeft, Send, Video, Phone, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { formatBRL, useDb } from "@/lib/store";
 import { Conversation, ConversationContent, ConversationScrollButton } from "@/components/ai-elements/conversation";
 import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 import { PromptInput, PromptInputFooter, PromptInputSubmit, PromptInputTextarea } from "@/components/ai-elements/prompt-input";
 import { useImagem } from "@/lib/imagem-storage";
+import { PagamentoPix } from "@/components/pagamento-pix";
+
 
 export const Route = createFileRoute("/conversas/$id")({
   head: () => ({ meta: [{ title: "Conversa privada — Vínculo" }, { name: "description", content: "Converse em tempo real e inicie uma chamada de vídeo." }, { property: "og:title", content: "Conversa privada — Vínculo" }, { property: "og:description", content: "Converse em tempo real e inicie uma chamada de vídeo." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
@@ -47,17 +49,6 @@ function Conversa() {
 
   const irParaChamada = () => navigate({ to: "/chamada/$id", params: { id }, search: { min: minutos } });
 
-  const finalizarPagamento = () => {
-    const venda = registrarVenda({ modeloId: perfil.id, modeloNome: perfil.nome, minutos, valor });
-    setProcessando(true);
-    window.setTimeout(() => {
-      marcarPago(venda);
-      setProcessando(false);
-      setPagamento(false);
-      toast.success("Pagamento confirmado");
-      irParaChamada();
-    }, 900);
-  };
 
   return (
     <main className="relative mx-auto flex h-[100dvh] w-full max-w-[680px] flex-col overflow-hidden bg-[#efeae2] text-slate-900 shadow-2xl">
