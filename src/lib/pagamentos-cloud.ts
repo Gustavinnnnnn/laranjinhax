@@ -81,3 +81,20 @@ export function usePagamentos() {
 
   return { pagamentos, carregando };
 }
+
+/** Vendas reais do banco, no mesmo formato usado pelas telas do painel. */
+export function useVendas() {
+  const { pagamentos, carregando } = usePagamentos();
+  const vendas = pagamentos.map((p) => ({
+    id: p.id,
+    modeloId: p.modeloId,
+    modeloNome: p.modeloNome,
+    minutos: p.minutos,
+    valor: p.valor,
+    status: (p.pago ? "pago" : "pendente") as "pago" | "pendente",
+    cliente: p.cliente,
+    criadoEm: p.criadoEm,
+    pagoEm: p.pagoEm,
+  }));
+  return { vendas, carregando };
+}
