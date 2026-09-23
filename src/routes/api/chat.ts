@@ -38,29 +38,58 @@ export const Route = createFileRoute("/api/chat")({
           `Escreva sempre em português do Brasil.`,
         ].join("\n");
 
-        const key = process.env["NVIDIA_API_KEY"];
-        if (!key) {
-          return Response.json({ error: "IA não configurada" }, { status: 401 });
-        }
+        const nvidiaKey = process.env["NVIDIA_API_KEY"];
+        const lovableKey = process.env["LOVABLE_API_KEY"];
 
-        const nvidia = createOpenAI({
-          baseURL: "https://integrate.api.nvidia.com/v1",
-          apiKey: key,
-        });
-
-        try {
+        const gerar = async (apiKey: string, baseURL: string, modelo: string) => {
+          const provedor = createOpenAI({ baseURL, apiKey });
           const result = streamText({
-            model: nvidia.chat(MODELO_IA),
+            model: provedor.chat(modelo),
             system,
             messages: mensagens,
             temperature: 0.8,
             maxOutputTokens: 220,
           });
-          return result.toTextStreamResponse();
-        } catch (erro) {
-          console.error("[chat] falha na IA", (erro as Error).message);
-          return Response.json({ error: "A IA não conseguiu responder agora" }, { status: 502 });
+          // Aguarda o primeiro trecho para detectar falha antes de responder.
+          const stream = result.textStream[Symbol.asyncIterator]();
+          const primeiro = await stream.next();
+          const corpo = new ReadableStream<Uint8Array>({
+            async pull(controller) {
+              const cod = new TextEncoder();
+              if (!primeiro.done && primeiro.value) {
+                controller.enqueue(cod.encode(primeiro.value));
+                primeiro.done = true;
+                primeiro.value = "";
+                return;
+              }
+              const proximo = await stream.next();
+              if (proximo.done) controller.close();
+              else controller.enqueue(cod.encode(proximo.value));
+            },
+          });
+          return new Response(corpo, {
+            headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+          });
+        };
+
+        if (nvidiaKey) {
+          try {
+            return await gerar(nvidiaKey, "https://integrate.api.nvidia.com/v1", MODELO_IA);
+          } catch (erro) {
+            console.error("[chat] NVIDIA indisponível", (erro as Error).message);
+          }
         }
+
+        if (lovableKey) {
+          try {
+            return await gerar(lovableKey, "https://ai.gateway.lovable.dev/v1", "google/gemini-3.8-flash");
+          } catch (erro) {
+            console.error("[chat] IA alternativa falhou", (erro as Error).message);
+          }
+        }
+
+        return Response.json({ error: "A IA não conseguiu responder agora" }, { status: 502 });
+
       },
     },
   },
