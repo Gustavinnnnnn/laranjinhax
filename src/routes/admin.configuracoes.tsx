@@ -15,7 +15,7 @@ function Configuracoes() {
   useEffect(() => setRascunho(config), [config]);
 
   const salvar = () => {
-    atualizarConfig({ ...rascunho, nomeSite: rascunho.nomeSite.trim() || "Vínculo" });
+    atualizarConfig({ ...rascunho, nomeSite: rascunho.nomeSite.trim() || "Laranjinha" });
     toast.success("Configurações salvas");
   };
 
