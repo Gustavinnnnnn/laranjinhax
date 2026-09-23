@@ -58,26 +58,29 @@ function Conversa() {
 
 
   return (
-    <main className="relative mx-auto flex h-[100dvh] w-full max-w-[680px] flex-col overflow-hidden bg-muted text-ink shadow-2xl">
+    <main className="relative mx-auto flex h-[100dvh] w-full max-w-[680px] flex-col overflow-hidden bg-ink text-background shadow-2xl">
       {fundoSrc ? (
         <img src={fundoSrc} alt="" className="pointer-events-none absolute inset-0 size-full object-cover object-center" />
       ) : fotoSrc ? (
         <img src={fotoSrc} alt="" className="pointer-events-none absolute inset-0 size-full object-cover object-center" />
       ) : null}
-      <div className="pointer-events-none absolute inset-0 bg-background/45" />
-      <header className="relative z-10 flex shrink-0 items-center gap-3 border-b border-border/60 bg-chat-surface px-4 pb-3 pt-[max(.75rem,env(safe-area-inset-top))] backdrop-blur-xl">
-        <Link to="/" aria-label="Voltar" className="grid size-9 place-items-center rounded-full text-foreground transition-colors hover:bg-muted">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/20 to-ink/75" />
+      <header className="relative z-10 flex shrink-0 items-center gap-3 border-b border-background/10 bg-ink/25 px-4 pb-3 pt-[max(.75rem,env(safe-area-inset-top))] backdrop-blur-2xl">
+        <Link to="/" aria-label="Voltar" className="grid size-10 place-items-center rounded-full border border-background/10 bg-background/5 text-background transition-colors hover:bg-background/10">
           <ArrowLeft className="size-4" />
         </Link>
-        <img src={fotoSrc} alt={perfil.nome} className="size-10 rounded-full object-cover ring-2 ring-background shadow-sm" />
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-display text-[15px] font-bold">{perfil.nome}</p>
-          <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase text-emerald-700">
-            <span className="size-1.5 rounded-full bg-emerald-500" />
-            {pensando[id] ? "digitando…" : perfil.online ? "online" : "vista hoje"}
-          </p>
+        <div className="relative shrink-0">
+          <img src={fotoSrc} alt={perfil.nome} className="size-12 rounded-full object-cover p-0.5 ring-2 ring-brand/55" />
+          <span className="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-ink bg-emerald-500" />
         </div>
-        <Button onClick={() => setPagamento(true)} aria-label="Iniciar chamada de vídeo" title="Chamada de vídeo" size="icon" className="rounded-full bg-brand text-primary-foreground shadow-md hover:bg-brand/90">
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-display text-lg font-bold text-background">{perfil.nome}</p>
+          <div className="mt-0.5 flex items-center gap-1.5">
+            <span className="rounded bg-brand px-1.5 py-0.5 text-[9px] font-bold uppercase text-primary-foreground">Laranjinha</span>
+            <span className="text-[11px] font-medium text-background/55">{pensando[id] ? "digitando…" : perfil.online ? "online agora" : "vista hoje"}</span>
+          </div>
+        </div>
+        <Button onClick={() => setPagamento(true)} aria-label="Iniciar chamada de vídeo" title="Chamada de vídeo" size="icon" className="size-10 rounded-full border border-brand/40 bg-brand/20 text-brand shadow-lg backdrop-blur-xl hover:bg-brand hover:text-primary-foreground">
           <Video className="size-[18px]" />
         </Button>
       </header>
@@ -85,39 +88,39 @@ function Conversa() {
       <Conversation className="relative z-[1] min-h-0 flex-1">
         <ConversationContent className="mx-auto w-full max-w-[560px] gap-3 px-4 py-5">
           <div className="py-3 text-center">
-            <span className="rounded-full bg-chat-surface px-3 py-1 text-[10px] font-bold uppercase text-muted-foreground shadow-sm backdrop-blur-md">Hoje</span>
+            <span className="rounded-full border border-background/10 bg-ink/25 px-3 py-1 text-[10px] font-bold uppercase text-background/55 backdrop-blur-xl">Hoje</span>
           </div>
 
           {mensagens.length === 0 && (
-            <div className="mx-auto max-w-[290px] rounded-2xl bg-chat-surface p-4 text-center shadow-sm backdrop-blur-md">
-              <p className="font-display text-sm font-semibold">Diga um oi para {perfil.nome}</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Uma conversa boa pode começar com algo simples.</p>
+            <div className="mx-auto max-w-[290px] rounded-2xl border border-background/10 bg-background/10 p-4 text-center shadow-lg backdrop-blur-xl">
+              <p className="font-display text-sm font-semibold text-background">Diga um oi para {perfil.nome}</p>
+              <p className="mt-1 text-xs leading-relaxed text-background/60">Uma conversa boa pode começar com algo simples.</p>
             </div>
           )}
 
           {mensagens.map((m) => (
             <Message key={m.id} from={m.role} className="max-w-full gap-0">
-              <MessageContent className={m.role === "user" ? "max-w-[85%] rounded-2xl rounded-tr-sm bg-ink px-3.5 py-2.5 text-background shadow-md" : "max-w-[85%] rounded-2xl rounded-tl-sm border border-border/70 bg-chat-surface-strong px-3.5 py-2.5 text-foreground shadow-sm backdrop-blur-md"}>
+              <MessageContent className={m.role === "user" ? "max-w-[85%] rounded-2xl rounded-br-sm bg-brand px-3.5 py-2.5 text-primary-foreground shadow-lg shadow-brand/20" : "max-w-[85%] rounded-2xl rounded-bl-sm border border-background/10 bg-background/10 px-3.5 py-2.5 text-background shadow-lg backdrop-blur-xl"}>
                 <MessageResponse className="text-[14px] leading-relaxed">{m.texto || "…"}</MessageResponse>
-                <p className={`mt-1 flex items-center justify-end gap-1 text-[9px] ${m.role === "user" ? "text-background/65" : "text-muted-foreground"}`}>{m.hora}{m.role === "user" && <CheckCheck className="size-3 text-brand" />}</p>
+                <p className={`mt-1 flex items-center justify-end gap-1 text-[9px] ${m.role === "user" ? "text-primary-foreground/70" : "text-background/50"}`}>{m.hora}{m.role === "user" && <CheckCheck className="size-3" />}</p>
               </MessageContent>
             </Message>
           ))}
 
           {pensando[id] && (
             <div className="flex justify-start">
-              <div className="rounded-2xl rounded-tl-sm bg-chat-surface-strong px-4 py-3 shadow-sm backdrop-blur-md">
-                <p className="animate-pulse text-xs font-medium text-muted-foreground">digitando…</p>
+              <div className="rounded-2xl rounded-bl-sm border border-background/10 bg-background/10 px-4 py-3 shadow-lg backdrop-blur-xl">
+                <p className="animate-pulse text-xs font-medium text-background/60">digitando…</p>
               </div>
             </div>
           )}
 
-          <div className="mt-5 rounded-2xl border border-background/60 bg-chat-surface p-4 shadow-lg backdrop-blur-xl">
-            <div><p className="font-display text-sm font-bold">Quer conversar olhando nos meus olhos?</p><p className="mt-0.5 text-[11px] text-muted-foreground">Chamada de vídeo por {formatBRL(perfil.precoPorMinuto)}/min</p></div>
+          <div className="mt-5 rounded-2xl border border-brand/30 bg-ink/45 p-4 text-background shadow-2xl backdrop-blur-2xl">
+            <div className="flex items-start gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-xl bg-brand text-primary-foreground"><Video className="size-4" /></span><div><p className="font-display text-sm font-bold">Quer conversar olhando nos meus olhos?</p><p className="mt-0.5 text-[11px] text-background/60">Chamada de vídeo por {formatBRL(perfil.precoPorMinuto)}/min</p></div></div>
             <div className="mt-3 grid grid-cols-4 gap-2">
-              {duracoes.map((d) => <Button key={d} onClick={() => setMinutos(d)} variant={minutos === d ? "default" : "outline"} className={`h-9 rounded-lg px-1 text-xs font-bold ${minutos === d ? "bg-ink text-background hover:bg-ink/90" : "bg-background/70"}`}>{d} min</Button>)}
+              {duracoes.map((d) => <Button key={d} onClick={() => setMinutos(d)} variant={minutos === d ? "default" : "outline"} className={`h-9 rounded-lg px-1 text-xs font-bold ${minutos === d ? "border-brand bg-brand text-primary-foreground hover:bg-brand/90" : "border-background/15 bg-background/5 text-background hover:bg-background/10 hover:text-background"}`}>{d} min</Button>)}
             </div>
-            <Button onClick={() => setPagamento(true)} className="mt-3 h-12 w-full rounded-xl bg-brand text-sm font-bold text-primary-foreground shadow-lg shadow-brand/20 hover:bg-brand/90">Chamar agora · {formatBRL(valor)}</Button>
+            <Button onClick={() => setPagamento(true)} className="mt-3 h-12 w-full rounded-xl bg-brand text-sm font-bold text-primary-foreground shadow-lg shadow-brand/25 hover:bg-brand/90">Chamar agora · {formatBRL(valor)}</Button>
           </div>
           <div ref={fim} />
         </ConversationContent>
@@ -125,9 +128,9 @@ function Conversa() {
       </Conversation>
 
       <div className="relative z-10 shrink-0 px-4 pb-[max(.75rem,env(safe-area-inset-bottom))] pt-2">
-        <PromptInput onSubmit={() => enviarMensagem()} className="relative rounded-2xl border border-background/70 bg-chat-surface-strong p-1.5 shadow-xl backdrop-blur-2xl">
-          <PromptInputTextarea ref={campo} rows={1} value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Sua mensagem..." className="min-h-11 resize-none bg-transparent py-3 pl-3 pr-14 text-[14px]" />
-          <PromptInputSubmit status={pensando[id] ? "submitted" : "ready"} disabled={!texto.trim() || pensando[id]} aria-label="Enviar mensagem" className="absolute bottom-2 right-2 size-10 rounded-xl bg-brand text-primary-foreground shadow-md hover:bg-brand/90"><Send className="size-[17px]" /></PromptInputSubmit>
+        <PromptInput onSubmit={() => enviarMensagem()} className="relative rounded-2xl border border-background/15 bg-background/10 p-1.5 shadow-2xl backdrop-blur-2xl">
+          <PromptInputTextarea ref={campo} rows={1} value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Diga algo especial..." className="min-h-12 resize-none bg-transparent py-3.5 pl-3 pr-14 text-[14px] font-medium text-background placeholder:text-background/40" />
+          <PromptInputSubmit status={pensando[id] ? "submitted" : "ready"} disabled={!texto.trim() || pensando[id]} aria-label="Enviar mensagem" className="absolute bottom-2 right-2 size-10 rounded-xl bg-brand text-primary-foreground shadow-lg shadow-brand/30 transition-transform active:scale-90 hover:bg-brand/90"><Send className="size-[17px]" /></PromptInputSubmit>
         </PromptInput>
       </div>
 

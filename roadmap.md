@@ -9,3 +9,4 @@
 - [x] Validar os fluxos em celular e computador
 - [x] Aplicar a identidade Laranjinha ao chat e ao pagamento Pix
 - [x] Tornar as respostas mais acolhedoras, diretas e orientadas à chamada
+- [x] Refinar a tela inicial, o cabeçalho e a digitação do chat
